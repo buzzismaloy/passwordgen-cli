@@ -33,7 +33,7 @@ func runGenerate() {
 		fmt.Println("passwordgen - Generate secure passwords")
 		fmt.Println()
 		fmt.Println("Usage:")
-		fmt.Println("  go run main.go [flags]")
+		fmt.Println("  go run main.go [flags]\n  or\n  passwordgen [flags]")
 		fmt.Println()
 		fmt.Println("Flags:")
 		flag.PrintDefaults()
