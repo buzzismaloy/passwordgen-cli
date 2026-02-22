@@ -26,8 +26,39 @@ func runGenerate() {
 	lower := flag.Bool("lowercase", true, "use lowercase letters")
 	upper := flag.Bool("uppercase", false, "use uppercase letters")
 	symbols := flag.Bool("symbols", false, "use symbols")
+	help := flag.Bool("h", false, "show help")
+	helpLong := flag.Bool("help", false, "show help")
+
+	flag.Usage = func() {
+		fmt.Println("passwordgen - Generate secure passwords")
+		fmt.Println()
+		fmt.Println("Usage:")
+		fmt.Println("  go run main.go [flags]")
+		fmt.Println()
+		fmt.Println("Flags:")
+		flag.PrintDefaults()
+		fmt.Println()
+		fmt.Println("Examples:")
+		fmt.Println("  go run main.go                   # generate password with default settings")
+		fmt.Println("  go run main.go --length 16 --upper --symbols  # generate password 16 chars with uppercase and symbols")
+	}
 
 	flag.Parse()
+
+	if *help || *helpLong {
+		flag.Usage()
+		return
+	}
+
+	if *length < passwordgen.MinPassLength || *length > passwordgen.MaxPassLength {
+		ui.PrintError(fmt.Errorf("%w; password length must be between %d and %d", passwordgen.ErrInvalidLength, passwordgen.MinPassLength, passwordgen.MaxPassLength))
+		return
+	}
+
+	if !*digits && !*lower && !*upper && !*symbols {
+		ui.PrintError(fmt.Errorf("%w; at least one character set must be enabled (digits, lower, upper, symbols)", passwordgen.ErrNoCharacterSet))
+		return
+	}
 
 	flags := config.Flags{
 		Length:    *length,
@@ -35,12 +66,6 @@ func runGenerate() {
 		Lowercase: *lower,
 		Uppercase: *upper,
 		Symbols:   *symbols,
-	}
-
-	flag.Usage = func() {
-		fmt.Println("Usage: passwordgen generate [options]")
-		fmt.Println("Options:")
-		flag.PrintDefaults()
 	}
 
 	svc := service.NewPasswordService()
