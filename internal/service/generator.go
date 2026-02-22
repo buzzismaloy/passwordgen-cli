@@ -22,7 +22,7 @@ func (ps *PasswordService) Generate(f config.Flags) (string, error) {
 
 	gen, err := passwordgen.NewGenerator(*cfg, nil)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	return gen.Generate()

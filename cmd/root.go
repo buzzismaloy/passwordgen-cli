@@ -7,7 +7,7 @@ import (
 
 var RootCmd = &Command{
 	Use:   "passwordgen",
-	Short: "CLI password genertator",
+	Short: "CLI password generator",
 	Long:  "CLI wrapper around passwordgen-lib library",
 }
 
